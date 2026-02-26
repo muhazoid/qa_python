@@ -33,3 +33,25 @@ class TestBooksCollector:
         collector = BooksCollector()
         collector.add_new_book(book_name)
         assert book_name in collector.books_genre
+
+
+    def test_add_new_book_duplicate(self):
+        collector = BooksCollector()
+        book_name = "Дубликат"
+        collector.add_new_book(book_name)
+        collector.add_new_book(book_name)
+        assert len(collector.books_genre) == 1
+
+
+    @pytest.mark.parametrize("book_name, genre, expected_genre", [
+        ("Книга1", "Фантастика", "Фантастика"),
+        ("Книга2", "Ужасы", "Ужасы"),
+        ("Книга3", "Детективы", "Детективы"),
+        ("Книга4", "Мультфильмы", "Мультфильмы"),
+        ("Книга5", "Комедии", "Комедии"),
+    ])
+    def test_set_book_genre_valid_genres(self, book_name, genre, expected_genre):
+        collector = BooksCollector()
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, genre)
+        assert collector.get_book_genre(book_name) == expected_genre

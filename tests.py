@@ -1,5 +1,7 @@
 from main import BooksCollector
 import pytest
+import random
+
 
 # класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
 # обязательно указывать префикс Test
@@ -24,7 +26,7 @@ class TestBooksCollector:
     # напиши свои тесты ниже
     # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
     @pytest.mark.parametrize("book_name", [
-        "А" * 40,  # Максимальная длина 40 символов
+        "А" * 40,
         "Книга с пробелами",
         "Книга-с-дефисом",
         "12345"
@@ -55,3 +57,18 @@ class TestBooksCollector:
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
         assert collector.get_book_genre(book_name) == expected_genre
+
+
+    def test_get_books_with_specific_genre(self):
+        books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
+        genre = ['Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
+        collector = BooksCollector()
+        for i, book in enumerate(books):
+            collector.add_new_book(book)
+            if i < 2:
+                collector.set_book_genre(book,"Фантастика")
+            else:
+                random_genre = random.choice(genre)
+                collector.set_book_genre(book,random_genre)
+        
+        assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]

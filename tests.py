@@ -83,3 +83,11 @@ class TestBooksCollector:
                 collector.set_book_genre(book, genre[i])
 
         assert collector.get_books_for_children() == ['Книга1', 'Книга4', 'Книга5']
+
+    def test_add_book_in_favorites_adds_book(self):
+        book_name = "Книга в Избранном"
+        collector = BooksCollector()
+        collector.add_new_book(book_name)
+        collector.add_book_in_favorites(book_name)
+        assert collector.get_list_of_favorites_books() == ["Книга в Избранном"]
+

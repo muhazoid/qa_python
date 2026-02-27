@@ -74,6 +74,14 @@ class TestBooksCollector:
         assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]
 
 
+    def test_get_books_with_specific_genre_with_invalid_genre(self):
+        collector = BooksCollector()
+        collector.add_new_book('Книга1')
+        collector.set_book_genre('Книга1', 'Фантастика')
+        assert collector.get_books_with_specific_genre("Invalid genre") == []
+
+
+
     def test_get_books_for_children_success(self):
         books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
         genre = ['Фантастика','Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']

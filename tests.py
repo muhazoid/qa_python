@@ -72,3 +72,14 @@ class TestBooksCollector:
                 collector.set_book_genre(book,random_genre)
         
         assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]
+
+
+    def test_get_books_for_children_success(self):
+        books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
+        genre = ['Фантастика','Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
+        collector = BooksCollector()
+        for i, book in enumerate(books):
+                collector.add_new_book(book)
+                collector.set_book_genre(book, genre[i])
+
+        assert collector.get_books_for_children() == ['Книга1', 'Книга4', 'Книга5']

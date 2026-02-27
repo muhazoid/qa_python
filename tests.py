@@ -37,7 +37,7 @@ class TestBooksCollector:
         assert book_name in collector.books_genre
 
 
-    def test_add_new_book_duplicate(self):
+    def test_add_new_book_not_add_duplicate(self):
         collector = BooksCollector()
         book_name = "Дубликат"
         collector.add_new_book(book_name)
@@ -52,14 +52,23 @@ class TestBooksCollector:
         ("Книга4", "Мультфильмы", "Мультфильмы"),
         ("Книга5", "Комедии", "Комедии"),
     ])
-    def test_set_book_genre_valid_genres(self, book_name, genre, expected_genre):
+    def test_set_book_genre_valid_genres_good_add(self, book_name, genre, expected_genre):
         collector = BooksCollector()
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
         assert collector.get_book_genre(book_name) == expected_genre
 
 
-    def test_get_books_with_specific_genre(self):
+    def test_set_book_genre_invalid_genre_not_set(self):
+        collector = BooksCollector()
+        book_name = "Книга1"
+        genre = "Несуществующий жанр"
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, genre)
+        assert collector.get_book_genre(book_name) == ""
+        
+
+    def test_get_books_with_specific_genre_good_get(self):
         books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
         genre = ['Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
         collector = BooksCollector()
@@ -74,7 +83,7 @@ class TestBooksCollector:
         assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]
 
 
-    def test_get_books_with_specific_genre_with_invalid_genre(self):
+    def test_get_books_with_specific_genre_invalid_genre_not_add(self):
         collector = BooksCollector()
         collector.add_new_book('Книга1')
         collector.set_book_genre('Книга1', 'Фантастика')
@@ -82,7 +91,7 @@ class TestBooksCollector:
 
 
 
-    def test_get_books_for_children_success(self):
+    def test_get_books_for_children_good_get(self):
         books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
         genre = ['Фантастика','Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
         collector = BooksCollector()

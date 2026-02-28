@@ -77,5 +77,24 @@ class TestBooksCollector:
         collector.add_book_in_favorites(book_name)
         collector.delete_book_from_favorites(book_name)
         assert collector.get_list_of_favorites_books() == []
+    
+    def test_get_book_genre_book_returns_genre(self, collector_with_books):
+        assert collector_with_books.get_book_genre("Книга1") == "Фантастика"
 
+    def test_get_books_genre_returns_complete_dictionary(self, collector, collector_with_books):
+        result_dict = collector.get_books_genre()
+        assert result_dict == {
+        "Книга1": "Фантастика",
+        "Книга2": "Ужасы",
+        "Книга3": "Детективы",
+        "Книга4": "Мультфильмы",
+        "Книга5": "Комедии"
+    }
 
+    def test_get_list_of_favorites_books_returns_all_favorites(self, collector):
+        books = ["Книга1", "Книга2","Книга3"]
+        for book in books:
+            collector.add_new_book(book)
+        collector.add_book_in_favorites("Книга2")
+        favorites  = collector.get_list_of_favorites_books()
+        assert favorites == ["Книга2"]

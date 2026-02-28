@@ -3,27 +3,16 @@ import pytest
 import random
 
 
-# класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
-# обязательно указывать префикс Test
+
 class TestBooksCollector:
 
-    # пример теста:
-    # обязательно указывать префикс test_
-    # дальше идет название метода, который тестируем add_new_book_
-    # затем, что тестируем add_two_books - добавление двух книг
     def test_add_new_book_add_two_books(self, collector):
-        # создаем экземпляр (объект) класса BooksCollector
        
-        # добавляем две книги
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
 
-        # проверяем, что добавилось именно две
-        # словарь books_rating, который нам возвращает метод get_books_rating, имеет длину 2
         assert len(collector.books_genre) == 2
 
-    # напиши свои тесты ниже
-    # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
     @pytest.mark.parametrize("book_name", [
         "А" * 40,
         "Книга с пробелами",
@@ -77,20 +66,12 @@ class TestBooksCollector:
         assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]
 
 
-    def test_get_books_with_specific_genre_invalid_genre_not_add(self, collector):
-        collector.add_new_book('Книга1')
-        collector.set_book_genre('Книга1', 'Фантастика')
+    def test_get_books_with_specific_genre_invalid_genre_not_add(self, collector, collector_with_books):
         assert collector.get_books_with_specific_genre("Invalid genre") == []
 
 
 
-    def test_get_books_for_children_good_get(self, collector):
-        books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
-        genre = ['Фантастика','Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
-        for i, book in enumerate(books):
-                collector.add_new_book(book)
-                collector.set_book_genre(book, genre[i])
-
+    def test_get_books_for_children_good_get(self, collector, collector_with_books ):
         assert collector.get_books_for_children() == ['Книга1', 'Книга4', 'Книга5']
 
     def test_add_book_in_favorites_adds_book(self, collector):

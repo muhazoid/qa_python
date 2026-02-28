@@ -5,16 +5,6 @@ from main import BooksCollector
 def collector():
     return BooksCollector()
 
-import pytest
-from main import BooksCollector
-
-@pytest.fixture
-def collector():
-    """
-    Базовая фикстура: создает новый экземпляр коллектора для каждого теста.
-    Гарантирует изоляцию тестов.
-    """
-    return BooksCollector()
 
 @pytest.fixture
 def collector_with_books(collector):

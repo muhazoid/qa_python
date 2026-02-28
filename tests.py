@@ -7,10 +7,8 @@ import random
 class TestBooksCollector:
 
     def test_add_new_book_add_two_books(self, collector):
-       
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
-
         assert len(collector.books_genre) == 2
 
     @pytest.mark.parametrize("book_name", [
@@ -23,13 +21,11 @@ class TestBooksCollector:
         collector.add_new_book(book_name)
         assert book_name in collector.books_genre
 
-
     def test_add_new_book_not_add_duplicate(self, collector):
         book_name = "Дубликат"
         collector.add_new_book(book_name)
         collector.add_new_book(book_name)
         assert len(collector.books_genre) == 1
-
 
     @pytest.mark.parametrize("book_name, genre, expected_genre", [
         ("Книга1", "Фантастика", "Фантастика"),
@@ -43,14 +39,12 @@ class TestBooksCollector:
         collector.set_book_genre(book_name, genre)
         assert collector.get_book_genre(book_name) == expected_genre
 
-
     def test_set_book_genre_invalid_genre_not_set(self, collector):
         book_name = "Книга1"
         genre = "Несуществующий жанр"
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
         assert collector.get_book_genre(book_name) == ""
-        
 
     def test_get_books_with_specific_genre_good_get(self, collector):
         books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
@@ -65,11 +59,8 @@ class TestBooksCollector:
         
         assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]
 
-
     def test_get_books_with_specific_genre_invalid_genre_not_add(self, collector, collector_with_books):
         assert collector.get_books_with_specific_genre("Invalid genre") == []
-
-
 
     def test_get_books_for_children_good_get(self, collector, collector_with_books ):
         assert collector.get_books_for_children() == ['Книга1', 'Книга4', 'Книга5']

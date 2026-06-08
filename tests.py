@@ -3,47 +3,29 @@ import pytest
 import random
 
 
-# класс TestBooksCollector объединяет набор тестов, которыми мы покрываем наше приложение BooksCollector
-# обязательно указывать префикс Test
+
 class TestBooksCollector:
 
-    # пример теста:
-    # обязательно указывать префикс test_
-    # дальше идет название метода, который тестируем add_new_book_
-    # затем, что тестируем add_two_books - добавление двух книг
-    def test_add_new_book_add_two_books(self):
-        # создаем экземпляр (объект) класса BooksCollector
-        collector = BooksCollector()
-
-        # добавляем две книги
+    def test_add_new_book_add_two_books(self, collector):
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
-
-        # проверяем, что добавилось именно две
-        # словарь books_rating, который нам возвращает метод get_books_rating, имеет длину 2
         assert len(collector.books_genre) == 2
 
-    # напиши свои тесты ниже
-    # чтобы тесты были независимыми в каждом из них создавай отдельный экземпляр класса BooksCollector()
     @pytest.mark.parametrize("book_name", [
         "А" * 40,
         "Книга с пробелами",
         "Книга-с-дефисом",
         "12345"
     ])
-    def test_add_new_book_valid_names(self, book_name):
-        collector = BooksCollector()
+    def test_add_new_book_valid_names(self, collector, book_name):
         collector.add_new_book(book_name)
         assert book_name in collector.books_genre
 
-
-    def test_add_new_book_duplicate(self):
-        collector = BooksCollector()
+    def test_add_new_book_not_add_duplicate(self, collector):
         book_name = "Дубликат"
         collector.add_new_book(book_name)
         collector.add_new_book(book_name)
         assert len(collector.books_genre) == 1
-
 
     @pytest.mark.parametrize("book_name, genre, expected_genre", [
         ("Книга1", "Фантастика", "Фантастика"),
@@ -52,17 +34,21 @@ class TestBooksCollector:
         ("Книга4", "Мультфильмы", "Мультфильмы"),
         ("Книга5", "Комедии", "Комедии"),
     ])
-    def test_set_book_genre_valid_genres(self, book_name, genre, expected_genre):
-        collector = BooksCollector()
+    def test_set_book_genre_valid_genres_good_add(self, collector, book_name, genre, expected_genre):
         collector.add_new_book(book_name)
         collector.set_book_genre(book_name, genre)
         assert collector.get_book_genre(book_name) == expected_genre
 
+    def test_set_book_genre_invalid_genre_not_set(self, collector):
+        book_name = "Книга1"
+        genre = "Несуществующий жанр"
+        collector.add_new_book(book_name)
+        collector.set_book_genre(book_name, genre)
+        assert collector.get_book_genre(book_name) == ""
 
-    def test_get_books_with_specific_genre(self):
+    def test_get_books_with_specific_genre_good_get(self, collector):
         books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
         genre = ['Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
-        collector = BooksCollector()
         for i, book in enumerate(books):
             collector.add_new_book(book)
             if i < 2:
@@ -73,13 +59,42 @@ class TestBooksCollector:
         
         assert collector.get_books_with_specific_genre("Фантастика") == ["Книга1", "Книга2"]
 
+    def test_get_books_with_specific_genre_invalid_genre_not_add(self, collector, collector_with_books):
+        assert collector.get_books_with_specific_genre("Invalid genre") == []
 
-    def test_get_books_for_children_success(self):
-        books = ["Книга1", "Книга2", "Книга3", "Книга4", "Книга5"]
-        genre = ['Фантастика','Ужасы', 'Детективы', 'Мультфильмы', 'Комедии']
-        collector = BooksCollector()
-        for i, book in enumerate(books):
-                collector.add_new_book(book)
-                collector.set_book_genre(book, genre[i])
-
+    def test_get_books_for_children_good_get(self, collector, collector_with_books ):
         assert collector.get_books_for_children() == ['Книга1', 'Книга4', 'Книга5']
+
+    def test_add_book_in_favorites_adds_book(self, collector):
+        book_name = "Книга в Избранном"
+        collector.add_new_book(book_name)
+        collector.add_book_in_favorites(book_name)
+        assert collector.get_list_of_favorites_books() == ["Книга в Избранном"]
+
+    def test_delete_book_from_favorites_removes_book_good_remove(self, collector):
+        book_name = "Книга в Избранном для удаления"
+        collector.add_new_book(book_name)
+        collector.add_book_in_favorites(book_name)
+        collector.delete_book_from_favorites(book_name)
+        assert collector.get_list_of_favorites_books() == []
+    
+    def test_get_book_genre_book_returns_genre(self, collector_with_books):
+        assert collector_with_books.get_book_genre("Книга1") == "Фантастика"
+
+    def test_get_books_genre_returns_complete_dictionary(self, collector, collector_with_books):
+        result_dict = collector.get_books_genre()
+        assert result_dict == {
+        "Книга1": "Фантастика",
+        "Книга2": "Ужасы",
+        "Книга3": "Детективы",
+        "Книга4": "Мультфильмы",
+        "Книга5": "Комедии"
+    }
+
+    def test_get_list_of_favorites_books_returns_all_favorites(self, collector):
+        books = ["Книга1", "Книга2","Книга3"]
+        for book in books:
+            collector.add_new_book(book)
+        collector.add_book_in_favorites("Книга2")
+        favorites  = collector.get_list_of_favorites_books()
+        assert favorites == ["Книга2"]
